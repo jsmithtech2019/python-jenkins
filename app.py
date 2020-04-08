@@ -134,24 +134,24 @@ def help(unused):
 
 # Post a relevant gif from Giphy
 def giphy(text):
-    print('Text: ' + text)
-    search = encodeQuery(text[len('/giphy '):])
-    print('Search: ' + search)
-    imgURL = 'https://api.giphy.com/v1/gifs/search?api_key={}&q={}'.format(giphy_api_key, search)
+    data = {
+        'api_key': giphy_api_key,
+        'q': text[len('/giphy '):],
+        'limit': 1
+    }
+    url = 'https://api.giphy.com/v1/gifs/search?' + urlencode(data)
 
-    print('url: ' + imgURL)
+    # Get gif from Giphy
+    imgRequest = urlopen(url).read().decode()
+
     try:
-        # Get Gif from Giphy
-        imgRequest = requests.get(imgURL, stream=True)
-
-        print('Content: ' + json.loads(imgRequest.content))
-        print('Data: ' + json.loads(imgRequest.content))['data']
-        # Parse gif
-        jsobj = json.parse(imgRequest.content)['data'][0]
+        # Parse gif response
+        idobj = json.loads(imgRequest)['data'][0]
 
         # Format and respond with URL
-        giphyUrl = 'http://i.giphy.com/{}.gif'.format(jsobj['id'])
+        giphyUrl = 'http://i.giphy.com/{}.gif'.format(idobj['id'])
         reply_with_image(giphyUrl)
+
     except Exception as e:
         # If no gif was returned, respond as such
         print('Exception: ' + e)
@@ -171,10 +171,6 @@ def clear(unused):
 
 def all(unused):
     reply('all')
-
-# Removes spaces and replaces them with '+' marks
-def encodeQuery(query):
-    return query.replace(' ','+')
 
 # Send a message in the groupchat
 def reply(msg):
