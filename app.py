@@ -191,11 +191,11 @@ def clear(unused):
 
 # Tag everyone in the chat
 def all(unused):
-    url = 'https://api.groupme.com/v3/groups/{}?token={}'.format(groupId,groupmeToken)
+    url = 'https://api.groupme.com/v3/groups/{}?token={}'.format(group_id,personal_token)
 
     groupInfo = json.loads(urlopen(url).read().decode())['response']
 
-    text = '{"bot_id":"{}","text":"@all","attachments":[{'.format(botID)
+    text = '{"bot_id":"{}","text":"@all","attachments":[{'.format(bot_id)
     loci = '"loci":['
     user_ids = '],"type":"mentions","user_ids":['
     for person in groupInfo['members']:
