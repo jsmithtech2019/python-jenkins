@@ -94,6 +94,13 @@ def webhook():
     # Convert text to lowercase
     message['text'] = message['text'].lower()
 
+    # Check if any command is being called by user
+    for c in commands:
+        if c.syntax in message['text'][0:len(c.syntax)]:
+            # Call the method with that name
+            globals()[c.name](message['text'])
+            return '', 200
+
     # Mitch easter egg
     if '/mitch' in message['text'][0:len('/mitch')]:
         reply_with_image('',mitchFace)
@@ -108,16 +115,6 @@ def webhook():
     if 'jenkin' in message['text']:
         reply(random.choice(butlerStatements))
         return '', 200
-
-    # Check if any command is being called by user
-    for c in commands:
-        if c.syntax in message['text'][0:len(c.syntax)]:
-            # Call the method with that name
-            # globals()
-            # print('Fnc name: ' + c.name)
-            # print('Message: ' + message['text'])
-            globals()[c.name](message['text'])
-            return '', 200
 
     # No command called or found, return
     return '', 200
@@ -154,13 +151,30 @@ def giphy(text):
 
     except Exception as e:
         # If no gif was returned, respond as such
+        print('Exception: ' + str(e))
         reply('Couldn\'t find a gif 💩')
 
 def lmgtfy(text):
     reply('lmgtfy')
 
 def xkcd(text):
-    reply('xkcd')
+    data = {
+        'action': 'xkcd',
+        'query': text[len('/xkcd '):]
+    }
+    url = 'https://relevantxkcd.appspot.com/process?' + urlencode(data)
+
+    try:
+        # response
+        comicRequest = urlopen(url).read().decode()
+
+        # Get comic file name
+        comicName = comicRequest.split()[3].split('/')[-1]
+
+        reply_with_image('','https://imgs.xkcd.com/comics/{}'.format(comicName))
+
+    except Exception as e:
+        reply('Couldn\'t find an XKCD 💩')
 
 def git(unused):
     reply('git')
