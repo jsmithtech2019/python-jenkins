@@ -117,9 +117,9 @@ def webhook():
 
 # Print the help message
 def help(comm='everything'):
-    txt = ''
+    txt = 'Usage instructions for your Butler:\n'
     for i in commands:
-        txt += i.syntax + ': ' + i.description + '\n'
+        txt += '"' + i.syntax + '" : ' + i.description + '\n'
 
     reply(txt)
 
