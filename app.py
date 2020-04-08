@@ -143,6 +143,7 @@ def giphy(text):
 
     # Get gif from Giphy
     imgRequest = urlopen(url).read().decode()
+    print(imgRequest)
 
     try:
         # Parse gif response
