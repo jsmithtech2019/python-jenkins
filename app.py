@@ -155,7 +155,10 @@ def giphy(text):
         reply('Couldn\'t find a gif 💩')
 
 def lmgtfy(text):
-    reply('lmgtfy')
+    data = {
+        'q': text[len('/lmgtfy '):]
+    }
+    reply('http://lmgtfy.com/?' + urlencode(data))
 
 def xkcd(text):
     data = {
@@ -176,14 +179,37 @@ def xkcd(text):
     except Exception as e:
         reply('Couldn\'t find an XKCD 💩')
 
+# Get a random git commit message
 def git(unused):
-    reply('git')
+    url = 'http://www.whatthecommit.com/index.txt'
+    reply(urlopen(url).read().decode())
 
+# Clear the chat screen by posting newlines
 def clear(unused):
-    reply('clear')
+    # What a silly command
+    reply(' \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nChat cleared.')
 
+# Tag everyone in the chat
 def all(unused):
-    reply('all')
+    url = 'https://api.groupme.com/v3/groups/{}?token={}'.format(groupId,groupmeToken)
+
+    groupInfo = json.loads(urlopen(url).read().decode())['response']
+
+    text = '{"bot_id":"{}","text":"@all","attachments":[{'.format(botID)
+    loci = '"loci":['
+    user_ids = '],"type":"mentions","user_ids":['
+    for person in groupInfo['members']:
+        loci += '[0,1],'
+        user_ids += '"{}",'.format(n['user_id'])
+
+    text += loci[:-1] + user_ids[:-1] + ']}]}'
+
+    # Post to Groupme
+    req = urllib.request.Request('https://api.groupme.com/v3/bots/post')
+    req.add_header('Content-Type', 'application/json; charset=utf-8')
+    jsonData = text.encode('utf-8')
+    req.add_header('Content-Length', len(jsonData))
+    response = urllib.request.urlopen(req, jsonData)
 
 # Send a message in the groupchat
 def reply(msg):
