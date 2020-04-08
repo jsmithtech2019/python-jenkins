@@ -200,7 +200,7 @@ def all(unused):
     user_ids = '],"type":"mentions","user_ids":['
     for person in groupInfo['members']:
         loci += '[0,1],'
-        user_ids += '"{}",'.format(n['user_id'])
+        user_ids += '"{}",'.format(person['user_id'])
 
     text += loci[:-1] + user_ids[:-1] + ']}]}'
 
