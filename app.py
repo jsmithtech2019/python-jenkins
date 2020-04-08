@@ -195,7 +195,7 @@ def all(unused):
 
     groupInfo = json.loads(urlopen(url).read().decode())['response']
 
-    text = '{"bot_id":"' + bot_id + '","text":"@all","attachments":[{'.format(bot_id)
+    text = '{"bot_id":"' + bot_id + '","text":"@all","attachments":[{'
     loci = '"loci":['
     user_ids = '],"type":"mentions","user_ids":['
     for person in groupInfo['members']:
