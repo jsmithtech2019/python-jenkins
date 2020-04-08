@@ -111,6 +111,15 @@ def webhook():
 
 ################################################################################
 
+# Print the help message
+def help(comm='everything'):
+    txt = ''
+    for i in commands:
+        txt += i.syntax + ': ' + i.description + '\n'
+
+    reply(txt)
+
+
 # Send a message in the groupchat
 def reply(msg):
     url = 'https://api.groupme.com/v3/bots/post'
