@@ -143,19 +143,21 @@ def giphy(text):
 
     # Get gif from Giphy
     imgRequest = urlopen(url).read().decode()
-    print(imgRequest)
 
     try:
         # Parse gif response
         idobj = json.loads(imgRequest)['data'][0]
 
+        print(json.dumps(idobj))
+
         # Format and respond with URL
         giphyUrl = 'http://i.giphy.com/{}.gif'.format(idobj['id'])
+        print(giphyUrl)
         reply_with_image(giphyUrl)
 
     except Exception as e:
         # If no gif was returned, respond as such
-        print('Exception: ' + e)
+        print('Exception: ' + str(e))
         reply('Couldn\'t find a gif 💩')
 
 def lmgtfy(text):
