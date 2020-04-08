@@ -134,9 +134,12 @@ def help(unused):
 
 # Post a relevant gif from Giphy
 def giphy(text):
+    print('Text: ' + text)
     search = encodeQuery(text[len('/giphy'):])
+    print('Search: ' + search)
     imgURL = 'https://api.giphy.com/v1/gifs/search?api_key={}&q={}'.format(giphy_api_key, search)
 
+    print('url: ' + imgURL)
     # Get Gif from Giphy
     imgRequest = requests.get(imgURL, stream=True)
     try:
