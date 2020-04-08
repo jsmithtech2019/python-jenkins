@@ -205,11 +205,11 @@ def all(unused):
     text += loci[:-1] + user_ids[:-1] + ']}]}'
 
     # Post to Groupme
-    req = urllib.request.Request('https://api.groupme.com/v3/bots/post')
+    req = Request('https://api.groupme.com/v3/bots/post')
     req.add_header('Content-Type', 'application/json; charset=utf-8')
     jsonData = text.encode('utf-8')
     req.add_header('Content-Length', len(jsonData))
-    response = urllib.request.urlopen(req, jsonData)
+    response = urlopen(req, jsonData)
 
 # Send a message in the groupchat
 def reply(msg):
