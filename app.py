@@ -113,6 +113,7 @@ def webhook():
     for c in commands:
         if c.syntax in message['text'][0:len(c.syntax)]:
             # Call the method with that name
+            print('Locals: ' + locals())
             print('Fnc name: ' + c.name)
             print('Message: ' + message['text'])
             locals()[c.name](message['text'])
