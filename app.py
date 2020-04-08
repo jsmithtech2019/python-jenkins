@@ -3,6 +3,7 @@ import os
 import json
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+import requests
 from flask import Flask, request
 import random
 
@@ -134,7 +135,7 @@ def reply_with_image(msg, imgURL):
 
 # Uploads image to GroupMe's services and returns the new URL
 def upload_image_to_groupme(imgURL):
-    imgRequest = request.get(imgURL, stream=True)
+    imgRequest = requests.get(imgURL, stream=True)
     filename = 'temp.png'
     postImage = None
     if imgRequest.status_code == 200:
@@ -147,7 +148,7 @@ def upload_image_to_groupme(imgURL):
         url = 'https://image.groupme.com/pictures'
         files = {'file': open(filename, 'rb')}
         payload = {'access_token': 'eo7JS8SGD49rKodcvUHPyFRnSWH1IVeZyOqUMrxU'}
-        r = request.post(url, files=files, params=payload)
+        r = requests.post(url, files=files, params=payload)
         imageurl = r.json()['payload']['url']
         os.remove(filename)
         return imageurl
