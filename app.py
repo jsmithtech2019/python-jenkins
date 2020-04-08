@@ -17,20 +17,23 @@ personal_token = os.environ.get('MY_GROUPME_TOKEN')
 giphy_api_key = os.environ.get('GIPHY_API_KEY')
 wolfram_api_key = os.environ.get('WOLFRAM_APP_ID')
 
+# Contains the function name, command syntax and description
+# of the each available command
 class command:
     def __init__(self, name, syntax, description):
         self.name = name
         self.syntax = syntax
         self.description = description
 
+# Command objects list
 commands = [
-    command('helpCommand', '/help', 'Post help message.'),
-    command('giphyCommand', '/giphy', 'Posts a relevant Gif.'),
-    command('lmgtfyCommand', '/lmgtfy', 'Posts dumb question response.'),
-    command('xkcdCommand', '/xkcd', 'Finds a relevant XKCD comic.'),
-    command('gitCommit', '/commit', 'Posts a random git commit.'),
-    command('clearCommand', '/clear', 'Clears the chat history.'),
-    command('allCommand', '/all', 'Tags all members of the chat.'),
+    command('help', '/help', 'Post help message.'),
+    command('giphy', '/giphy', 'Posts a relevant Gif.'),
+    command('lmgtfy', '/lmgtfy', 'Posts dumb question response.'),
+    command('xkcd', '/xkcd', 'Finds a relevant XKCD comic.'),
+    command('git', '/commit', 'Posts a random git commit.'),
+    command('clear', '/clear', 'Clears the chat history.'),
+    command('all', '/all', 'Tags all members of the chat.'),
 
     # Easter Eggs
     #command('mitchEasterEgg', '/mitch', ''),
@@ -106,30 +109,69 @@ def webhook():
         reply(random.choice(butlerStatements))
         return '', 200
 
-    # TODO: remove 
-    if 'help' in message['text']:
-        help()
-        return '', 200
+    # Check if any command is being called by user
+    for c in commands:
+        if c.syntax in message['text'][0:len(c.syntax)]:
+            # Call the method with that name
+            locals()[c.name](message['text'])
+            return '', 200
 
+    # No command called or found, return
     return '', 200
 
 ################################################################################
 
-# Print the help message
-def help(comm='everything'):
+# Print the help message for all commands
+def help(unused):
     txt = 'Usage instructions for your Butler:\n'
     for i in commands:
-        txt += '"' + i.syntax + '" : ' + i.description + '\n'
+        txt += '"{}" - {}\n'.format(i.syntax, i.description)
 
     reply(txt)
 
+# Post a relevant gif from Giphy
+def giphy(text):
+    search = encodeQuery(text[len('/giphy'):])
+    imgURL = 'https://api.giphy.com/v1/gifs/search?api_key={}&q={}'.format(giphy_api_key, search)
+
+    # Get Gif from Giphy
+    imgRequest = requests.get(imgURL, stream=True)
+    try:
+        # Parse gif
+        jsobj = json.parse(imgRequest.content)['data'][0]
+
+        # Format and respond with URL
+        giphyUrl = 'http://i.giphy.com/{}.gif'.format(jsobj['id'])
+        reply_with_image(giphyUrl)
+    except Exception as e:
+        # If no gif was returned, respond as such
+        reply('Couldn\'t find a gif 💩')
+
+def lmgtfy(text):
+
+
+def xkcd(text):
+
+
+def git(unused):
+
+
+def clear(unused):
+
+
+def all(unused):
+
+
+# Removes spaces and replaces them with '+' marks
+def encodeQuery(query):
+    return query.replace(' ','+')
 
 # Send a message in the groupchat
 def reply(msg):
     url = 'https://api.groupme.com/v3/bots/post'
     data = {
-        'bot_id'        : bot_id,
-        'text'            : msg
+        'bot_id': bot_id,
+        'text': msg
     }
     request = Request(url, urlencode(data).encode())
     json = urlopen(request).read().decode()
@@ -139,23 +181,29 @@ def reply_with_image(msg, imgURL):
     url = 'https://api.groupme.com/v3/bots/post'
     urlOnGroupMeService = upload_image_to_groupme(imgURL)
     data = {
-        'bot_id'        : bot_id,
-        'text'            : msg,
-        'picture_url'        : urlOnGroupMeService
+        'bot_id': bot_id,
+        'text': msg,
+        'picture_url': urlOnGroupMeService
     }
     request = Request(url, urlencode(data).encode())
     json = urlopen(request).read().decode()
 
 # Uploads image to GroupMe's services and returns the new URL
 def upload_image_to_groupme(imgURL):
-    imgRequest = requests.get(imgURL, stream=True)
-    filename = 'temp.png'
+    if 'gif' in imgURL or 'giph' in imgURL:
+        filename = 'temp.gif'
+    else:
+        filename = 'temp.png'
     postImage = None
+
+    imgRequest = requests.get(imgURL, stream=True)
+
     if imgRequest.status_code == 200:
         # Save Image
         with open(filename, 'wb') as image:
             for chunk in imgRequest:
                 image.write(chunk)
+
         # Send Image
         headers = {'content-type': 'application/json'}
         url = 'https://image.groupme.com/pictures'
