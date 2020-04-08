@@ -143,6 +143,8 @@ def giphy(text):
     # Get Gif from Giphy
     imgRequest = requests.get(imgURL, stream=True)
     try:
+        print('Content: ' + imgRequest.content)
+        print('Data: ' + json.parse(imgRequest.content))['data']
         # Parse gif
         jsobj = json.parse(imgRequest.content)['data'][0]
 
