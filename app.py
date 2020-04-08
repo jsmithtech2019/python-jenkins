@@ -106,6 +106,10 @@ def webhook():
         reply(random.choice(butlerStatements))
         return '', 200
 
+    # TODO: remove 
+    if 'help' in message['text']:
+        help()
+        return '', 200
 
     return '', 200
 
