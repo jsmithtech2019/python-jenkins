@@ -147,7 +147,7 @@ def upload_image_to_groupme(imgURL):
         headers = {'content-type': 'application/json'}
         url = 'https://image.groupme.com/pictures'
         files = {'file': open(filename, 'rb')}
-        payload = {'access_token': 'eo7JS8SGD49rKodcvUHPyFRnSWH1IVeZyOqUMrxU'}
+        payload = {'access_token': personal_token}
         r = requests.post(url, files=files, params=payload)
         imageurl = r.json()['payload']['url']
         os.remove(filename)
