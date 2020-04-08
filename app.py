@@ -116,8 +116,13 @@ def webhook():
         reply(random.choice(butlerStatements))
         return '', 200
 
+    # Post Confused Nick Young if anyone says 'wut' in the chat
+    if 'wut' in message['text']:
+        reply_with_image('',confusedNickYoung)
+        return '', 200
+
     # No command called or found, return
-    return '', 200
+    return 'No command found', 200
 
 ################################################################################
 
