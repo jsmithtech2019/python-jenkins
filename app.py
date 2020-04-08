@@ -148,19 +148,19 @@ def giphy(text):
         reply('Couldn\'t find a gif 💩')
 
 def lmgtfy(text):
-
+    reply('lmgtfy')
 
 def xkcd(text):
-
+    reply('xkcd')
 
 def git(unused):
-
+    reply('git')
 
 def clear(unused):
-
+    reply('clear')
 
 def all(unused):
-
+    reply('all')
 
 # Removes spaces and replaces them with '+' marks
 def encodeQuery(query):
