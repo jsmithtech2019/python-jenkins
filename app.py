@@ -140,9 +140,10 @@ def giphy(text):
     imgURL = 'https://api.giphy.com/v1/gifs/search?api_key={}&q={}'.format(giphy_api_key, search)
 
     print('url: ' + imgURL)
-    # Get Gif from Giphy
-    imgRequest = requests.get(imgURL, stream=True)
     try:
+        # Get Gif from Giphy
+        imgRequest = requests.get(imgURL, stream=True)
+
         print('Content: ' + imgRequest.content)
         print('Data: ' + json.parse(imgRequest.content))['data']
         # Parse gif
@@ -153,6 +154,7 @@ def giphy(text):
         reply_with_image(giphyUrl)
     except Exception as e:
         # If no gif was returned, respond as such
+        print('Exception: ' + e)
         reply('Couldn\'t find a gif 💩')
 
 def lmgtfy(text):
