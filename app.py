@@ -87,6 +87,11 @@ def webhook():
     # 'message' is an object that represents a single GroupMe message.
     message = request.get_json()
 
+    try:
+        print(message['text'])
+    except Exception as e:
+        print(e)
+
     # Don't respond to bot messages
     if sender_is_bot(message):
         return 'Bot message, ignoring', 200
@@ -120,6 +125,14 @@ def webhook():
     if 'wut' in message['text']:
         reply_with_image('',confusedNickYoung)
         return '', 200
+
+    # Check if someone was removed
+    try:
+        if message['event']['type'] == 'membership.notifications.removed':
+            giphy('sniper')
+        return '', 200
+    except Exception as e:
+        print(e)
 
     # No command called or found, return
     return 'No command found', 200
