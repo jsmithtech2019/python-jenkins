@@ -132,8 +132,8 @@ def webhook():
             print('Sniping...')
             giphy('/giphy sniper')
             return '', 200
-    except Exception as e:
-        print(e)
+    except:
+        pass
 
     # No command called or found, return
     return 'No command found', 200
