@@ -88,7 +88,7 @@ def webhook():
     message = request.get_json()
 
     try:
-        print(message['text'])
+        print(message)
     except Exception as e:
         print(e)
 
@@ -128,9 +128,10 @@ def webhook():
 
     # Check if someone was removed
     try:
-        if message['event']['type'] == 'membership.notifications.removed':
-            giphy('sniper')
-        return '', 200
+        if 'membership.notifications.removed' in message['event']['type']:
+            print('Sniping...')
+            giphy('/giphy sniper')
+            return '', 200
     except Exception as e:
         print(e)
 
