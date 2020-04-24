@@ -128,7 +128,7 @@ def webhook():
 
     # Check if someone was removed
     try:
-        if 'membership.notifications.removed' in message['event']['type']:
+        if (message['sender_type'] == 'system') and ('removed' in message['text']):
             print('Sniping...')
             giphy('/giphy sniper')
             return '', 200
