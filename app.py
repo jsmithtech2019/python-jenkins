@@ -126,11 +126,14 @@ def webhook():
         reply_with_image('',confusedNickYoung)
         return '', 200
 
-    # Check if someone was removed
+    # Check if someone was removed or added
     try:
         if (message['sender_type'] == 'system') and ('removed' in message['text']):
             print('Sniping...')
             giphy('/giphy sniper')
+            return '', 200
+        else if (message['sender_type'] == 'system') and ('added' in message['text']):
+            giphy('/giphy hello')
             return '', 200
     except:
         pass
