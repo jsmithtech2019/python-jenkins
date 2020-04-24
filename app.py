@@ -132,7 +132,7 @@ def webhook():
             print('Sniping...')
             giphy('/giphy sniper')
             return '', 200
-        else if (message['sender_type'] == 'system') and ('added' in message['text']):
+        elif (message['sender_type'] == 'system') and ('added' in message['text']):
             giphy('/giphy hello')
             return '', 200
     except:
