@@ -88,9 +88,9 @@ def webhook():
     message = request.get_json()
 
     try:
-        print(message['text'])
+        print(message)
     except Exception as e:
-        print(e)
+        print('Exception' + e)
 
     # Don't respond to bot messages
     if sender_is_bot(message):
@@ -126,13 +126,17 @@ def webhook():
         reply_with_image('',confusedNickYoung)
         return '', 200
 
-    # Check if someone was removed
+    # Check if someone was removed or added
     try:
-        if message['event']['type'] == 'membership.notifications.removed':
-            giphy('sniper')
-        return '', 200
-    except Exception as e:
-        print(e)
+        if (message['sender_type'] == 'system') and ('removed' in message['text']):
+            print('Sniping...')
+            giphy('/giphy sniper')
+            return '', 200
+        elif (message['sender_type'] == 'system') and ('added' in message['text']):
+            giphy('/giphy hello')
+            return '', 200
+    except:
+        pass
 
     # No command called or found, return
     return 'No command found', 200
