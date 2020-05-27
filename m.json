@@ -1,0 +1,427 @@
+{
+  "response": {
+    "count": 32954,
+    "messages": [
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/200x203.jpeg.59b42e57e3b3404283b05e246af5ad1b",
+        "created_at": 1587685575,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768557516855559",
+        "name": "Ching Atumadre",
+        "sender_id": "41272781",
+        "sender_type": "user",
+        "source_guid": "android-76596ecc-b132-43c8-b6a9-99340d0bbcc8",
+        "system": false,
+        "text": "Really?",
+        "user_id": "41272781",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/129x169.jpeg.ea6fad0d55674dfe84c413dd2cecdc99",
+        "created_at": 1587685534,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768553471071421",
+        "name": "poon hunter",
+        "sender_id": "14408235",
+        "sender_type": "user",
+        "source_guid": "c13291be5b8f5f11d2301ee8c523444d",
+        "system": false,
+        "text": "oof discord purge",
+        "user_id": "14408235",
+        "platform": "gm"
+      },
+      {
+        "attachments": [
+          {
+            "type": "image",
+            "url": "https://i.groupme.com/245x220.gif.a79d7b17ca8443cabfde9bbedb7d35cf"
+          }
+        ],
+        "avatar_url": "https://i.groupme.com/512x512.png.d9664e2669c14eb98f09a5774556c710",
+        "created_at": 1587685449,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768544927601271",
+        "name": "Jenkins",
+        "sender_id": "614587",
+        "sender_type": "bot",
+        "source_guid": "4031034067ea0138b16f22000a96548a",
+        "system": false,
+        "text": null,
+        "user_id": "614587",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/129x169.jpeg.ea6fad0d55674dfe84c413dd2cecdc99",
+        "created_at": 1587685447,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768544795785893",
+        "name": "poon hunter",
+        "sender_id": "14408235",
+        "sender_type": "user",
+        "source_guid": "912a27dc612cc23e108e5ae0db776b2a",
+        "system": false,
+        "text": "/giphy live in deer",
+        "user_id": "14408235",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/200x203.jpeg.59b42e57e3b3404283b05e246af5ad1b",
+        "created_at": 1587685427,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768542756144941",
+        "name": "Ching Atumadre",
+        "sender_id": "41272781",
+        "sender_type": "user",
+        "source_guid": "android-68d49398-e8c4-413c-a500-7cd3d41a2c24",
+        "system": false,
+        "text": "Fear*",
+        "user_id": "41272781",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/200x203.jpeg.59b42e57e3b3404283b05e246af5ad1b",
+        "created_at": 1587685422,
+        "favorited_by": [
+          "14408235",
+          "20680811"
+        ],
+        "group_id": "35310029",
+        "id": "158768542223155698",
+        "name": "Ching Atumadre",
+        "sender_id": "41272781",
+        "sender_type": "user",
+        "source_guid": "android-7f94fff7-917f-4faa-b31d-86be6f916ac9",
+        "system": false,
+        "text": "No one should live in dear of being purged",
+        "user_id": "41272781",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": null,
+        "created_at": 1587685364,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768536464095494",
+        "name": "GroupMe",
+        "sender_id": "system",
+        "sender_type": "system",
+        "source_guid": "0dbeb7d067ea013897ef22000aef6958",
+        "system": true,
+        "text": "Samir Jiwani changed name to poon hunter",
+        "user_id": "system",
+        "event": {
+          "type": "membership.nickname_changed",
+          "data": {
+            "user": {
+              "id": 14408235,
+              "nickname": "Samir Jiwani"
+            },
+            "name": "poon hunter"
+          }
+        },
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/747x747.jpeg.c695a4adf5754bd18f4fbba746f32b39",
+        "created_at": 1587685359,
+        "favorited_by": [
+          "41272781"
+        ],
+        "group_id": "35310029",
+        "id": "158768535934292131",
+        "name": "godfather",
+        "sender_id": "20680811",
+        "sender_type": "user",
+        "source_guid": "51BF7665-E281-4A8A-AEEF-3CF1145F1505",
+        "system": false,
+        "text": "I was concerned we were gonna have a purge",
+        "user_id": "20680811",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/500x500.png.ed26bf3718204bf284e44b59dccd3a81",
+        "created_at": 1587685342,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768534224536083",
+        "name": "Leon Xu",
+        "sender_id": "12955988",
+        "sender_type": "user",
+        "source_guid": "android-18da5d02-2679-4167-ab79-eb2a358f76a8",
+        "system": false,
+        "text": "I was going to say sorry to him",
+        "user_id": "12955988",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/747x747.jpeg.c695a4adf5754bd18f4fbba746f32b39",
+        "created_at": 1587685323,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768532345630780",
+        "name": "godfather",
+        "sender_id": "20680811",
+        "sender_type": "user",
+        "source_guid": "09B8272B-E65A-4037-AD70-CD214CCBABDD",
+        "system": false,
+        "text": "Ooh!!! I got something I wanna add to this bot",
+        "user_id": "20680811",
+        "platform": "gm"
+      },
+      {
+        "attachments": [
+          {
+            "type": "image",
+            "url": "https://i.groupme.com/498x292.gif.20cfac1cf028435ab4209fdc484f6e3d"
+          }
+        ],
+        "avatar_url": "https://i.groupme.com/512x512.png.d9664e2669c14eb98f09a5774556c710",
+        "created_at": 1587685307,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768530788168216",
+        "name": "Jenkins",
+        "sender_id": "614587",
+        "sender_type": "bot",
+        "source_guid": "ebe9f15067e90138574822000a6fc1f3",
+        "system": false,
+        "text": null,
+        "user_id": "614587",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/747x747.jpeg.c695a4adf5754bd18f4fbba746f32b39",
+        "created_at": 1587685305,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768530575642916",
+        "name": "godfather",
+        "sender_id": "20680811",
+        "sender_type": "user",
+        "source_guid": "E1782182-972E-420F-8F03-0C4A7BDE068F",
+        "system": false,
+        "text": "/giphy sniper",
+        "user_id": "20680811",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": null,
+        "created_at": 1587685288,
+        "favorited_by": [
+          "14408235"
+        ],
+        "group_id": "35310029",
+        "id": "158768528843646759",
+        "name": "GroupMe",
+        "sender_id": "system",
+        "sender_type": "system",
+        "source_guid": "e052d7e067e9013813b822000aa87b2c",
+        "system": true,
+        "text": "godfather added Samir Jiwani and Leon Xu to the group.",
+        "user_id": "system",
+        "event": {
+          "type": "membership.announce.added",
+          "data": {
+            "added_users": [
+              {
+                "id": 14408235,
+                "nickname": "Samir Jiwani"
+              },
+              {
+                "id": 12955988,
+                "nickname": "Leon Xu"
+              }
+            ],
+            "adder_user": {
+              "id": 20680811,
+              "nickname": "godfather"
+            }
+          }
+        },
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": null,
+        "created_at": 1587685275,
+        "favorited_by": [
+          "14408235",
+          "41272781"
+        ],
+        "group_id": "35310029",
+        "id": "158768527530546571",
+        "name": "GroupMe",
+        "sender_id": "system",
+        "sender_type": "system",
+        "source_guid": "d87f344067e90138ad2e22000ab9650c",
+        "system": true,
+        "text": "godfather removed BROTHER from the group.",
+        "user_id": "system",
+        "event": {
+          "type": "membership.notifications.removed",
+          "data": {
+            "remover_user": {
+              "id": 20680811,
+              "nickname": "godfather"
+            },
+            "removed_user": {
+              "id": 14524527,
+              "nickname": "BROTHER"
+            }
+          }
+        },
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": null,
+        "created_at": 1587685267,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768526731062927",
+        "name": "GroupMe",
+        "sender_id": "system",
+        "sender_type": "system",
+        "source_guid": "d3bb4f8067e90138f4f022000aa40184",
+        "system": true,
+        "text": "BROTHER removed Why Have I Worked 400 Hours For Capstone from the group.",
+        "user_id": "system",
+        "event": {
+          "type": "membership.notifications.removed",
+          "data": {
+            "remover_user": {
+              "id": 14524527,
+              "nickname": "BROTHER"
+            },
+            "removed_user": {
+              "id": 12955988,
+              "nickname": "Why Have I Worked 400 Hours For Capstone"
+            }
+          }
+        },
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": null,
+        "created_at": 1587685261,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768526192635494",
+        "name": "GroupMe",
+        "sender_id": "system",
+        "sender_type": "system",
+        "source_guid": "d085b99067e9013897ef22000aef6958",
+        "system": true,
+        "text": "BROTHER removed Magnum Cum Louda from the group.",
+        "user_id": "system",
+        "event": {
+          "type": "membership.notifications.removed",
+          "data": {
+            "remover_user": {
+              "id": 14524527,
+              "nickname": "BROTHER"
+            },
+            "removed_user": {
+              "id": 14408235,
+              "nickname": "Magnum Cum Louda"
+            }
+          }
+        },
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/747x747.jpeg.c695a4adf5754bd18f4fbba746f32b39",
+        "created_at": 1587685261,
+        "favorited_by": [
+          "14408235"
+        ],
+        "group_id": "35310029",
+        "id": "158768526158874381",
+        "name": "godfather",
+        "sender_id": "20680811",
+        "sender_type": "user",
+        "source_guid": "07E2A523-8EAB-40D3-97A4-5E8FE77A8A3B",
+        "system": false,
+        "text": "Bad timing",
+        "user_id": "20680811",
+        "platform": "gm"
+      },
+      {
+        "attachments": [
+          {
+            "type": "image",
+            "url": "https://i.groupme.com/1123x817.jpeg.b1182efad07c4f16883373175e8ba7ba"
+          }
+        ],
+        "avatar_url": "https://i.groupme.com/512x512.png.d9664e2669c14eb98f09a5774556c710",
+        "created_at": 1587685254,
+        "favorited_by": [
+          "14408235"
+        ],
+        "group_id": "35310029",
+        "id": "158768525466116571",
+        "name": "Jenkins",
+        "sender_id": "614587",
+        "sender_type": "bot",
+        "source_guid": "cc31255067e90138ad2e22000ab9650c",
+        "system": false,
+        "text": null,
+        "user_id": "614587",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/747x747.jpeg.c695a4adf5754bd18f4fbba746f32b39",
+        "created_at": 1587685253,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768525377623371",
+        "name": "godfather",
+        "sender_id": "20680811",
+        "sender_type": "user",
+        "source_guid": "57336688-7F25-4066-BB49-AF8BF0F49DD4",
+        "system": false,
+        "text": "But the real question is: who’s down for margs?",
+        "user_id": "20680811",
+        "platform": "gm"
+      },
+      {
+        "attachments": [],
+        "avatar_url": "https://i.groupme.com/750x750.jpeg.d1fe0b9e0870439b8c7134270799f564",
+        "created_at": 1587685252,
+        "favorited_by": [],
+        "group_id": "35310029",
+        "id": "158768525295571271",
+        "name": "BROTHER",
+        "sender_id": "14524527",
+        "sender_type": "user",
+        "source_guid": "15872E32-F455-4CE8-B68F-DDAF69E826FD",
+        "system": false,
+        "text": "Not in the fuxking mood my great aunts dying",
+        "user_id": "14524527",
+        "platform": "gm"
+      }
+    ]
+  },
+  "meta": {
+    "code": 200
+  }
+}
