@@ -53,6 +53,9 @@ mitchFace = 'https://i.imgur.com/0HirwrK.jpg'
 # Margarita image
 margaritaImage = 'https://i.imgur.com/4SbhSbY.jpeg'
 
+# Porque no los dos celebration image
+porqueImage = 'https://thumbs.gfycat.com/FirmExcitableEyas-small.gif'
+
 # Jenkins butlerish statements
 butlerStatements = ['You rang sir?',
                     'Those who choose to be servants know the most about being free.',
@@ -124,6 +127,10 @@ def webhook():
     # Post Confused Nick Young if anyone says 'wut' in the chat
     if 'wut' in message['text']:
         reply_with_image('',confusedNickYoung)
+        return '', 200
+
+    if 'porque no los dos' in message['text']:
+        reply_with_image('',porqueImage)
         return '', 200
 
     # Check if someone was removed or added
