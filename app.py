@@ -34,6 +34,7 @@ commands = [
     command('git', '/commit', 'Posts a random git commit.'),
     command('clear', '/clear', 'Clears the chat history.'),
     command('all', '/all', 'Tags all members of the chat.'),
+    command('sauce', '/sauce', 'Posts URL of last image.'),
 
     # Easter Eggs
     #command('mitchEasterEgg', '/mitch', ''),
@@ -81,7 +82,8 @@ butlerStatements = ['You rang sir?',
                     'Very good, Sir',
                     'That\'s the sort of special touch that a butler always adds']
 
-
+# Store the URL of the last posted image
+last_image_url = 'null'
 
 # Called whenever the app's callback URL receives a POST request
 # That'll happen every time a message is sent in the group
@@ -240,6 +242,10 @@ def all(unused):
     req.add_header('Content-Length', len(jsonData))
     response = urlopen(req, jsonData)
 
+# Send URL of last posted image
+def sauce(unused):
+    reply('The last image posted was from:\n' + last_image_url)
+
 # Send a message in the groupchat
 def reply(msg):
     url = 'https://api.groupme.com/v3/bots/post'
@@ -252,6 +258,10 @@ def reply(msg):
 
 # Send a message with an image attached in the groupchat
 def reply_with_image(msg, imgURL):
+    # Store copy of original URL
+    last_image_url = imgURL
+
+    # Upload to GroupMe for processing
     url = 'https://api.groupme.com/v3/bots/post'
     urlOnGroupMeService = upload_image_to_groupme(imgURL)
     data = {
