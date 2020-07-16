@@ -16,6 +16,8 @@ personal_token = os.environ.get('MY_GROUPME_TOKEN')
 
 giphy_api_key = os.environ.get('GIPHY_API_KEY')
 wolfram_api_key = os.environ.get('WOLFRAM_APP_ID')
+dictionary_api_key = os.environ.get('DICTIONARY_API_KEY')
+thesaurus_api_key = os.environ.get('THESAURUS_API_KEY')
 
 # Contains the function name, command syntax and description
 # of the each available command
@@ -34,7 +36,8 @@ commands = [
     command('git', '/commit', 'Posts a random git commit.'),
     command('clear', '/clear', 'Clears the chat history.'),
     command('all', '/all', 'Tags all members of the chat.'),
-    command('sauce', '/sauce', 'Posts URL of last image.'),
+    command('dictionary', '/dict', 'Returns definition of word.'),
+    command('thesaurus', '/thes', 'Returns similar words.'),
 
     # Easter Eggs
     #command('mitchEasterEgg', '/mitch', ''),
@@ -43,6 +46,7 @@ commands = [
     # Disabled commands (paid api etc)
     #command('wolframCommand', '/wolf', 'Finds Answer on Wolfram Alpha.'),
     #command('redditCommand', '/reddit', 'Posts related Reddit comment.'),
+    #command('sauce', '/sauce', 'Posts URL of last image.'),
 ]
 
 # Confused Nick Young Face Image
@@ -83,6 +87,7 @@ butlerStatements = ['You rang sir?',
                     'That\'s the sort of special touch that a butler always adds']
 
 # Store the URL of the last posted image
+# TODO: add flask session import and use that
 last_image_url = 'null'
 
 # Called whenever the app's callback URL receives a POST request
@@ -245,6 +250,20 @@ def all(unused):
 # Send URL of last posted image
 def sauce(unused):
     reply('The last image posted was from:\n' + last_image_url)
+
+# Find the dictionary definition of a word
+def dictionary(text):
+    url = 'https://dictionaryapi.com/api/v3/references/collegiate/json/{}?key={}'.format(text[len('/dict '):],dictionary_api_key)
+
+    resp = '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
+    reply(resp)
+
+# Find the similar words using thesaurus
+def thesaurus(text):
+    url = 'https://dictionaryapi.com/api/v3/references/thesaurus/json/{}?key={}'.format(text[len('/thes '):],thesaurus_api_key)
+
+    resp = '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
+    reply(resp)
 
 # Send a message in the groupchat
 def reply(msg):
