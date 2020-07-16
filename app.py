@@ -253,14 +253,14 @@ def sauce(unused):
 
 # Find the dictionary definition of a word
 def dictionary(text):
-    url = 'https://dictionaryapi.com/api/v3/references/collegiate/json/{}?key={}'.format(text[len('/dict '):],dictionary_api_key)
+    url = 'https://dictionaryapi.com/api/v3/references/collegiate/json/{}?key={}'.format(text[len('/dict '):].partition(' ')[0],dictionary_api_key)
 
     resp = '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
     reply(resp)
 
 # Find the similar words using thesaurus
 def thesaurus(text):
-    url = 'https://dictionaryapi.com/api/v3/references/thesaurus/json/{}?key={}'.format(text[len('/thes '):],thesaurus_api_key)
+    url = 'https://dictionaryapi.com/api/v3/references/thesaurus/json/{}?key={}'.format(text[len('/thes '):].partition(' ')[0],thesaurus_api_key)
 
     resp = '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
     reply(resp)
