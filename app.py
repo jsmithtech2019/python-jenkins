@@ -140,6 +140,10 @@ def webhook():
         reply_with_image('',porqueImage)
         return '', 200
 
+    if 'sniper' in message['text']:
+        giphy('/giphy sniper')
+        return '', 200
+
     # Check if someone was removed or added
     try:
         if (message['sender_type'] == 'system') and ('removed' in message['text']):
@@ -245,7 +249,7 @@ def all(unused):
     req.add_header('Content-Type', 'application/json; charset=utf-8')
     jsonData = text.encode('utf-8')
     req.add_header('Content-Length', len(jsonData))
-    response = urlopen(req, jsonData)
+    urlopen(req, jsonData)
 
 # Send URL of last posted image
 def sauce(unused):
@@ -253,17 +257,40 @@ def sauce(unused):
 
 # Find the dictionary definition of a word
 def dictionary(text):
-    url = 'https://dictionaryapi.com/api/v3/references/collegiate/json/{}?key={}'.format(text[len('/dict '):].partition(' ')[0],dictionary_api_key)
 
-    resp = '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
-    reply(resp)
+    # data = {
+    #     'api_key': giphy_api_key,
+    #     'q': text[len('/giphy '):],
+    #     'limit': 1
+    # }
+    # url = 'https://api.giphy.com/v1/gifs/search?' + urlencode(data)
+    data = {
+        'key': dictionary_api_key
+    }
+    url = 'https://dictionaryapi.com/api/v3/references/collegiate/json/{}?'.format(text[len('/dict '):].partition(' ')[0]) + urlencode(data)
+    #url = 'https://dictionaryapi.com/api/v3/references/collegiate/json/{}?key={}'.format(text[len('/dict '):].partition(' ')[0],dictionary_api_key)
+
+    try:
+        # response
+        resp = 'Definition: ' + '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
+
+        reply(resp)
+
+    except Exception as e:
+        reply('Couldn\'t find a definition.')
 
 # Find the similar words using thesaurus
 def thesaurus(text):
     url = 'https://dictionaryapi.com/api/v3/references/thesaurus/json/{}?key={}'.format(text[len('/thes '):].partition(' ')[0],thesaurus_api_key)
 
-    resp = '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
-    reply(resp)
+    try:
+        # response
+        resp = '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
+
+        reply(resp)
+
+    except Exception as e:
+        reply('Couldn\'t find a definition.')
 
 # Send a message in the groupchat
 def reply(msg):
