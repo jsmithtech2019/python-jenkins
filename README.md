@@ -1,6 +1,4 @@
-# Boilerplate GroupMe Bot *(Python 3)*
-
-The humble beginnings for *your* shiny new GroupMe bot! This boilerplate draws heavily on @apnorton's example, which he discusses in depth in his blogpost, ["How I wrote a GroupMe Chatbot in 24 hours"](http://www.apnorton.com/blog/2017/02/28/How-I-wrote-a-Groupme-Chatbot-in-24-hours/). I've added a few functions to abstract away common needs.
+# *(Python 3)* Groupme Butler
 
 ## Setup & Deployment
 
@@ -14,7 +12,7 @@ This bot boilerplate is written in Python 3, and is designed to be deployed on H
 
 4. In a Git-enabled terminal, clone this repository.
 
-	- That command is `git clone git@github.com:BenDMyers/Boilerplate_GroupMe_Bot.git`
+	- That command is `git clone git@github.com:jsmithtech2019/python-jenkins.git`
 
 5. In your newly Heroku-enabled terminal, navigate into the repository you just cloned.
 
@@ -42,7 +40,7 @@ This bot boilerplate is written in Python 3, and is designed to be deployed on H
 
 		- I've found `heroku logs -t` to be more useful. It will pull up the past hundred lines, but then it will show new log messages in real time.
 
-10. ***Only do this when you're sure your bot is [ready to go live](https://i.memecaptain.com/gend_images/Zi5JCA.jpg) so you don't annoy those in the groupchat with your testing. Instead of testing with `reply()`, test by `print()`-ing to the Heroku logs.*** To add your bot to a GroupMe groupchat...
+10. ***Only do this when you're sure your bot is [ready to go live] so you don't annoy those in the groupchat with your testing. Instead of testing with `reply()`, test by `print()`-ing to the Heroku logs.*** To add your bot to a GroupMe groupchat...
 
 	1. Go to [dev.groupme.com/bots](https://dev.groupme.com/bots) and click 'Create bot'.
 
