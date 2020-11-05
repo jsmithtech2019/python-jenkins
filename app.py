@@ -52,6 +52,9 @@ commands = [
 # Confused Nick Young Face Image
 confusedNickYoung = 'https://i.kym-cdn.com/entries/icons/mobile/000/018/489/nick-young-confused-face-300x256-nqlyaa.jpg'
 
+# wat guy (added by Samir)
+watMeme = 'https://i.imgur.com/qMKXZKh.gif'
+
 # Mitch face
 mitchFace = 'https://i.imgur.com/0HirwrK.jpg'
 
@@ -134,6 +137,10 @@ def webhook():
     # Post Confused Nick Young if anyone says 'wut' in the chat
     if 'wut' in message['text']:
         reply_with_image('',confusedNickYoung)
+        return '', 200
+
+    if 'wat' in message['text']:
+        reply_with_image('',watMeme)
         return '', 200
 
     if 'porque no los dos' in message['text']:
