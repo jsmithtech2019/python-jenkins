@@ -148,7 +148,7 @@ def help(unused):
 # Query Wolfram Alpha API with question
 def wolframCommand(text):
     data = {
-        'appid': WOLFRAM_APP_ID,
+        'appid': wolfram_api_key,
         'input': text,
         'output': 'json'
     }
