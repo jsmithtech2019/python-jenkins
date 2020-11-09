@@ -51,7 +51,8 @@ auto = {
     'marg': 'https://i.imgur.com/4SbhSbY.jpeg',
     'wut': 'https://i.kym-cdn.com/entries/icons/mobile/000/018/489/nick-young-confused-face-300x256-nqlyaa.jpg',
     'sniper': 'https://thumbs.gfycat.com/FirmExcitableEyas-small.gif',
-    'porque no los dos': 'https://thumbs.gfycat.com/FirmExcitableEyas-small.gif'
+    'porque no los dos': 'https://thumbs.gfycat.com/FirmExcitableEyas-small.gif',
+    'wat': 'https://i.imgur.com/qMKXZKh.gif'
 }
 
 # Jenkins butlerish statements
