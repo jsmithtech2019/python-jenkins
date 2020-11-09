@@ -112,7 +112,7 @@ def webhook():
     # Reply with one of the automatic easter eggs
     for a in auto:
         if a in message['text']:
-            reply_with_image('',auto(a))
+            reply_with_image('',auto[a])
             return '', 200
 
     # Jenkins response
@@ -248,13 +248,6 @@ def sauce(unused):
 
 # Find the dictionary definition of a word
 def dictionary(text):
-
-    # data = {
-    #     'api_key': giphy_api_key,
-    #     'q': text[len('/giphy '):],
-    #     'limit': 1
-    # }
-    # url = 'https://api.giphy.com/v1/gifs/search?' + urlencode(data)
     data = {
         'key': dictionary_api_key
     }
