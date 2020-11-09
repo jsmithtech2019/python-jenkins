@@ -149,7 +149,7 @@ def help(unused):
 def wolframCommand(text):
     data = {
         'appid': wolfram_api_key,
-        'input': text,
+        'input': text[len('/wolf '):],
         'output': 'json'
     }
     url = "http://api.wolframalpha.com/v2/query?" + urlencode(data)
