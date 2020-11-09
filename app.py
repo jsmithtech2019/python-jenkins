@@ -38,31 +38,21 @@ commands = [
     command('all', '/all', 'Tags all members of the chat.'),
     command('dictionary', '/dict', 'Returns definition of word.'),
     command('thesaurus', '/thes', 'Returns similar words.'),
-
-    # Easter Eggs
-    #command('mitchEasterEgg', '/mitch', ''),
-    #command('margEasterEgg', '/margs', '')
+    command('wolframCommand', '/wolf', 'Finds Answer on Wolfram Alpha.'),
 
     # Disabled commands (paid api etc)
-    #command('wolframCommand', '/wolf', 'Finds Answer on Wolfram Alpha.'),
     #command('redditCommand', '/reddit', 'Posts related Reddit comment.'),
     #command('sauce', '/sauce', 'Posts URL of last image.'),
 ]
 
-# Confused Nick Young Face Image
-confusedNickYoung = 'https://i.kym-cdn.com/entries/icons/mobile/000/018/489/nick-young-confused-face-300x256-nqlyaa.jpg'
-
-# wat guy (added by Samir)
-watMeme = 'https://i.imgur.com/qMKXZKh.gif'
-
-# Mitch face
-mitchFace = 'https://i.imgur.com/0HirwrK.jpg'
-
-# Margarita image
-margaritaImage = 'https://i.imgur.com/4SbhSbY.jpeg'
-
-# Porque no los dos celebration image
-porqueImage = 'https://thumbs.gfycat.com/FirmExcitableEyas-small.gif'
+# Automatic responses to various strings within a message
+auto = {
+    'mitch': 'https://i.imgur.com/0HirwrK.jpg',
+    'marg': 'https://i.imgur.com/4SbhSbY.jpeg',
+    'wut': 'https://i.kym-cdn.com/entries/icons/mobile/000/018/489/nick-young-confused-face-300x256-nqlyaa.jpg',
+    'sniper': 'https://thumbs.gfycat.com/FirmExcitableEyas-small.gif',
+    'porque no los dos': 'https://thumbs.gfycat.com/FirmExcitableEyas-small.gif'
+}
 
 # Jenkins butlerish statements
 butlerStatements = ['You rang sir?',
@@ -119,36 +109,15 @@ def webhook():
             globals()[c.name](message['text'])
             return '', 200
 
-    # Mitch easter egg
-    if '/mitch' in message['text'][0:len('/mitch')]:
-        reply_with_image('',mitchFace)
-        return '', 200
-
-    # Margarita eater egg
-    if 'marg' in message['text']:
-        reply_with_image('',margaritaImage)
-        return '', 200
+    # Reply with one of the automatic easter eggs
+    for a in auto:
+        if a in message['text']:
+            reply_with_image('',auto(a))
+            return '', 200
 
     # Jenkins response
     if 'jenkin' in message['text']:
         reply(random.choice(butlerStatements))
-        return '', 200
-
-    # Post Confused Nick Young if anyone says 'wut' in the chat
-    if 'wut' in message['text']:
-        reply_with_image('',confusedNickYoung)
-        return '', 200
-
-    if 'wat' in message['text']:
-        reply_with_image('',watMeme)
-        return '', 200
-
-    if 'porque no los dos' in message['text']:
-        reply_with_image('',porqueImage)
-        return '', 200
-
-    if 'sniper' in message['text']:
-        giphy('/giphy sniper')
         return '', 200
 
     # Check if someone was removed or added
@@ -175,6 +144,21 @@ def help(unused):
         txt += '"{}" - {}\n'.format(i.syntax, i.description)
 
     reply(txt)
+
+# Query Wolfram Alpha API with question
+def wolframCommand(text):
+    data = {
+        'appid': WOLFRAM_APP_ID,
+        'input': text,
+        'output': 'json'
+    }
+    url = "http://api.wolframalpha.com/v2/query?" + urlencode(data)
+    resp = json.loads(urlopen(url).read().decode())
+
+    try:
+        reply('The answer is: ' + resp['queryresult']['pods'][1]['subpods'][0]['plaintext'])
+    except:
+        reply('No solution could be found')
 
 # Post a relevant gif from Giphy
 def giphy(text):
