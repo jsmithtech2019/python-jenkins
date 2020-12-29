@@ -92,7 +92,7 @@ def webhook():
     message = request.get_json()
 
     try:
-        print('Received JSON: ' + message)
+        print(message)
     except Exception as e:
         print('Exception: ' + e)
 
