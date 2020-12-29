@@ -55,7 +55,7 @@ commands = [
     command('dictionary', '/dict', 'Returns definition of word.'),
     command('thesaurus', '/thes', 'Returns similar words.'),
     command('wolframCommand', '/wolf', 'Finds Answer on Wolfram Alpha.'),
-    command('getImageURL', '/sauce', 'Returns origin URL of last image.')
+    command('sauce', '/sauce', 'Returns origin URL of last image.')
 
     # Disabled commands (paid api etc)
     #command('redditCommand', '/reddit', 'Posts related Reddit comment.'),
