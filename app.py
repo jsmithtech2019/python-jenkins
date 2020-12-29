@@ -1,13 +1,29 @@
 # IMPORTS
-import os
+from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
 import json
+import os
+import random
+import requests
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
-import requests
-from flask import Flask, request
-import random
 
 app = Flask(__name__)
+
+# Database Information
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+
+db = SQLAlchemy(app)
+
+class ImagesTable(db.Model):
+    __tablename__ = "images"
+
+    _id = db.Column(db.integer, primary_key = True, autoincrement = True)
+    url = db.Column(db.String(200), nullable = False)
+
+    def __init__(self, url):
+        self.url = url
 
 # Get Environment Variables
 bot_id = os.environ.get('GROUPME_BOT_ID')
@@ -214,7 +230,7 @@ def xkcd(text):
 
         reply_with_image('','https://imgs.xkcd.com/comics/{}'.format(comicName))
 
-    except Exception as e:
+    except Exception:
         reply('Couldn\'t find an XKCD 💩')
 
 # Get a random git commit message
@@ -267,7 +283,7 @@ def dictionary(text):
 
         reply(resp)
 
-    except Exception as e:
+    except Exception:
         reply('Couldn\'t find a definition.')
 
 # Find the similar words using thesaurus
@@ -280,7 +296,7 @@ def thesaurus(text):
 
         reply(resp)
 
-    except Exception as e:
+    except Exception:
         reply('Couldn\'t find a definition.')
 
 # Send a message in the groupchat
@@ -291,12 +307,14 @@ def reply(msg):
         'text': msg
     }
     request = Request(url, urlencode(data).encode())
-    json = urlopen(request).read().decode()
+    urlopen(request).read().decode()
 
 # Send a message with an image attached in the groupchat
 def reply_with_image(msg, imgURL):
     # Store copy of original URL
-    last_image_url = imgURL
+    new_data = ImagesTable(imgURL)
+    db.session.add(new_data)
+    db.session.commit()
 
     # Upload to GroupMe for processing
     url = 'https://api.groupme.com/v3/bots/post'
@@ -307,7 +325,7 @@ def reply_with_image(msg, imgURL):
         'picture_url': urlOnGroupMeService
     }
     request = Request(url, urlencode(data).encode())
-    json = urlopen(request).read().decode()
+    urlopen(request).read().decode()
 
 # Uploads image to GroupMe's services and returns the new URL
 def upload_image_to_groupme(imgURL):
@@ -315,7 +333,6 @@ def upload_image_to_groupme(imgURL):
         filename = 'temp.gif'
     else:
         filename = 'temp.png'
-    postImage = None
 
     imgRequest = requests.get(imgURL, stream=True)
 
@@ -326,7 +343,6 @@ def upload_image_to_groupme(imgURL):
                 image.write(chunk)
 
         # Send Image
-        headers = {'content-type': 'application/json'}
         url = 'https://image.groupme.com/pictures'
         files = {'file': open(filename, 'rb')}
         payload = {'access_token': personal_token}
