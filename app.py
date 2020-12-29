@@ -19,8 +19,8 @@ db = SQLAlchemy(app)
 class ImagesTable(db.Model):
     __tablename__ = "images"
 
-    _id = db.Column(db.integer, primary_key = True, autoincrement = True)
-    url = db.Column(db.String(200), nullable = False)
+    _id = db.column(db.Integer, primary_key = True, autoincrement = True)
+    url = db.column(db.String(200), nullable = False)
 
     def __init__(self, url):
         self.url = url
