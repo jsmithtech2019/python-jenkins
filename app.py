@@ -55,10 +55,10 @@ commands = [
     command('dictionary', '/dict', 'Returns definition of word.'),
     command('thesaurus', '/thes', 'Returns similar words.'),
     command('wolframCommand', '/wolf', 'Finds Answer on Wolfram Alpha.'),
+    command('getImageURL', '/sauce', 'Returns origin URL of last image.')
 
     # Disabled commands (paid api etc)
     #command('redditCommand', '/reddit', 'Posts related Reddit comment.'),
-    #command('sauce', '/sauce', 'Posts URL of last image.'),
 ]
 
 # Automatic responses to various strings within a message
@@ -95,10 +95,6 @@ butlerStatements = ['You rang sir?',
                     'No one is a hero to their butler.',
                     'Very good, Sir',
                     'That\'s the sort of special touch that a butler always adds']
-
-# Store the URL of the last posted image
-# TODO: add flask session import and use that
-last_image_url = 'null'
 
 # Called whenever the app's callback URL receives a POST request
 # That'll happen every time a message is sent in the group
@@ -167,6 +163,11 @@ def help(unused):
         txt += '"{}" - {}\n'.format(i.syntax, i.description)
 
     reply(txt)
+
+# Reply with URL of last posted image
+def sauce(unused):
+    last_image_url = ImagesTable.query.order_by(ImagesTable._id.desc()).first()
+    reply('The last image posted was from:\n' + last_image_url)
 
 # Query Wolfram Alpha API with question
 def wolframCommand(text):
@@ -264,10 +265,6 @@ def all(unused):
     jsonData = text.encode('utf-8')
     req.add_header('Content-Length', len(jsonData))
     urlopen(req, jsonData)
-
-# Send URL of last posted image
-def sauce(unused):
-    reply('The last image posted was from:\n' + last_image_url)
 
 # Find the dictionary definition of a word
 def dictionary(text):
