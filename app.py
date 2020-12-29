@@ -92,14 +92,20 @@ def webhook():
     message = request.get_json()
 
     try:
-        print(message)
+        print('Received JSON: ' + message)
     except Exception as e:
-        print('Exception' + e)
+        print('Exception: ' + e)
 
     # Don't respond to bot messages
     if sender_is_bot(message):
         return 'Bot message, ignoring', 200
 
+    # Log message text (again)
+    try:
+        print('Message text: ' + message['text'])
+    except Exception as e:
+        print('Exception: ' + e)
+    
     # Convert text to lowercase
     message['text'] = message['text'].lower()
 
