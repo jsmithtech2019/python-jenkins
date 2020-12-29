@@ -11,7 +11,6 @@ from urllib.request import Request, urlopen
 app = Flask(__name__)
 
 # Database Information
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
 db = SQLAlchemy(app)
@@ -19,8 +18,8 @@ db = SQLAlchemy(app)
 class ImagesTable(db.Model):
     __tablename__ = "images"
 
-    _id = db.column(db.Integer, primary_key = True, autoincrement = True)
-    url = db.column(db.String(200), nullable = False)
+    _id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    url = db.Column(db.String(200), nullable = False)
 
     def __init__(self, url):
         self.url = url
