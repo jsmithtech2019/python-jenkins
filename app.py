@@ -166,8 +166,8 @@ def help(unused):
 
 # Reply with URL of last posted image
 def sauce(unused):
-    last_image_url = ImagesTable.query.order_by(ImagesTable._id.desc()).first()
-    reply('The last image posted was from:\n' + last_image_url.url)
+    last_image_url = ImagesTable.query.order_by(ImagesTable._id.desc()).first().url
+    reply('The last image posted was from:\n' + last_image_url)
 
 # Query Wolfram Alpha API with question
 def wolframCommand(text):
