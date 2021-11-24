@@ -10,6 +10,9 @@ from urllib.request import Request, urlopen
 
 app = Flask(__name__)
 
+################################################################################
+# DATABASE ITEMS                                                               #
+################################################################################
 # Database Information
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
@@ -34,6 +37,9 @@ class PostedImagesTable(db.Model):
     def __init__(self, url):
         self.url = url
 
+################################################################################
+# DEFINE ENVIRONMENT                                                           #
+################################################################################
 # Get Environment Variables
 bot_id = os.environ.get('GROUPME_BOT_ID')
 group_id = os.environ.get('GROUPME_GROUP_ID')
@@ -44,6 +50,9 @@ wolfram_api_key = os.environ.get('WOLFRAM_APP_ID')
 dictionary_api_key = os.environ.get('DICTIONARY_API_KEY')
 thesaurus_api_key = os.environ.get('THESAURUS_API_KEY')
 
+################################################################################
+# SETUP MAIN FUNCTIONS                                                         #
+################################################################################
 # Contains the function name, command syntax and description
 # of the each available command
 class command:
@@ -86,6 +95,9 @@ def getButlerQuote():
     with open('butler_statments.json', 'r') as f:
         return random.choice(json.loads(f.read()))
 
+################################################################################
+# MAIN                                                                         #
+################################################################################
 # Called whenever the app's callback URL receives a POST request
 # That'll happen every time a message is sent in the group
 @app.route('/', methods=['POST'])
@@ -144,8 +156,10 @@ def webhook():
     # No command called or found, return
     return 'No command found', 200
 
-################################################################################
 
+################################################################################
+# ADDITIONAL HELPER FUNCTIONS                                                  #
+################################################################################
 # Print the help message for all commands
 def help(unused):
     txt = 'Usage instructions for your Butler:\n'
