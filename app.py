@@ -25,6 +25,15 @@ class ImagesTable(db.Model):
     def __init__(self, url):
         self.url = url
 
+class PostedImagesTable(db.Model):
+    __tablename__ = "posted_images"
+
+    _id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    url = db.Column(db.String(200), nullable = False)
+
+    def __init__(self, url):
+        self.url = url
+
 # Get Environment Variables
 bot_id = os.environ.get('GROUPME_BOT_ID')
 group_id = os.environ.get('GROUPME_GROUP_ID')
@@ -55,7 +64,8 @@ commands = [
     command('dictionary', '/dict', 'Returns definition of word.'),
     command('thesaurus', '/thes', 'Returns similar words.'),
     command('wolframCommand', '/wolf', 'Finds Answer on Wolfram Alpha.'),
-    command('sauce', '/sauce', 'Returns origin URL of last image.')
+    command('sauce', '/sauce', 'Returns URL of the last image.'),
+    command('origin', '/origin', 'Returns origin URL of image.')
 
     # Disabled commands (paid api etc)
     #command('redditCommand', '/reddit', 'Posts related Reddit comment.'),
@@ -71,30 +81,10 @@ auto = {
     'wat ': 'https://i.imgur.com/qMKXZKh.gif'
 }
 
-# Jenkins butlerish statements
-butlerStatements = ['You rang sir?',
-                    'Those who choose to be servants know the most about being free.',
-                    'Am I really the only servant here?',
-                    'You can\'t unfry an egg, sir.',
-                    'Who employs butlers anymore?',
-                    'I see nothing, I hear nothing, I only serve.',
-                    'Good evening, Colonel. Can I give you a lift?',
-                    'You are not authorized to access this area.',
-                    'As far as I\'m concerned, \'whom\' is a word that was invented to make everyone sound like a butler.',
-                    'Ah, the patter of little feet around the house. There\'s nothing like having a midget for a butler.',
-                    'Wives in their husbands\' absences grow subtler, And daughters sometimes run off with the butler.',
-                    'I think I\'d take a human butler over a robot one.',
-                    'I went back-to-back from \'AI\' to \'Butler,\' literally with no break.',
-                    'I\'m simply one hell of a butler.',
-                    'It was no time for mercy, it was time to terminate with extreme prejudice.',
-                    'The thing about a diversion is that it has to be diverting.',
-                    'Jenkins, of course, is a gentleman’s gentlemen, not a butler, but if the call comes, he can buttle with the best of them.',
-                    'There are few greater pleasures in life than a devoted butler.',
-                    'A good butler should save his employer\'s life at least once a day.',
-                    'Never pass up new experiences, they enrich the mind.',
-                    'No one is a hero to their butler.',
-                    'Very good, Sir',
-                    'That\'s the sort of special touch that a butler always adds']
+# Load Jenkins butlerish statements and return one at random
+def getButlerQuote():
+    with open('butler_statments.json', 'r') as f:
+        return random.choice(json.loads(f.read()))
 
 # Called whenever the app's callback URL receives a POST request
 # That'll happen every time a message is sent in the group
@@ -136,7 +126,7 @@ def webhook():
 
     # Jenkins response
     if 'jenkin' in message['text']:
-        reply(random.choice(butlerStatements))
+        reply(random.choice(getButlerQuote()))
         return '', 200
 
     # Check if someone was removed or added
@@ -163,6 +153,17 @@ def help(unused):
         txt += '"{}" - {}\n'.format(i.syntax, i.description)
 
     reply(txt)
+
+# Find the first place an image was posted
+def origin(json_obj):
+    try:
+        imgUrl = json_obj['attachments'][0]['url']
+        # Hit reverse image api
+        # Parse response for origin URL
+        # Reply with origin
+    except Exception as e:
+        print('Exception: ' + e)
+        reply('No image origin found.')
 
 # Reply with URL of last posted image
 def sauce(unused):
