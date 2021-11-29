@@ -11,12 +11,29 @@ from urllib.request import Request, urlopen
 app = Flask(__name__)
 
 ################################################################################
-# DATABASE ITEMS                                                               #
+# DEFINE ENVIRONMENT                                                           #
 ################################################################################
-# Database Information
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Get Environment Variables
+bot_id = os.environ.get('GROUPME_BOT_ID')
+group_id = os.environ.get('GROUPME_GROUP_ID')
+personal_token = os.environ.get('MY_GROUPME_TOKEN')
+
+# Specify API keys
+giphy_api_key = os.environ.get('GIPHY_API_KEY')
+wolfram_api_key = os.environ.get('WOLFRAM_APP_ID')
+dictionary_api_key = os.environ.get('DICTIONARY_API_KEY')
+thesaurus_api_key = os.environ.get('THESAURUS_API_KEY')
+
+# Specify SQL Database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
+################################################################################
+# DATABASE ITEMS                                                               #
+################################################################################
+# Configure Database
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Start the database
 db = SQLAlchemy(app)
 
 class ImagesTable(db.Model):
@@ -36,19 +53,6 @@ class PostedImagesTable(db.Model):
 
     def __init__(self, url):
         self.url = url
-
-################################################################################
-# DEFINE ENVIRONMENT                                                           #
-################################################################################
-# Get Environment Variables
-bot_id = os.environ.get('GROUPME_BOT_ID')
-group_id = os.environ.get('GROUPME_GROUP_ID')
-personal_token = os.environ.get('MY_GROUPME_TOKEN')
-
-giphy_api_key = os.environ.get('GIPHY_API_KEY')
-wolfram_api_key = os.environ.get('WOLFRAM_APP_ID')
-dictionary_api_key = os.environ.get('DICTIONARY_API_KEY')
-thesaurus_api_key = os.environ.get('THESAURUS_API_KEY')
 
 ################################################################################
 # SETUP MAIN FUNCTIONS                                                         #
@@ -73,11 +77,11 @@ commands = [
     command('dictionary', '/dict', 'Returns definition of word.'),
     command('thesaurus', '/thes', 'Returns similar words.'),
     command('wolframCommand', '/wolf', 'Finds Answer on Wolfram Alpha.'),
-    command('sauce', '/sauce', 'Returns URL of the last image.'),
-    command('origin', '/origin', 'Returns origin URL of image.')
+    command('getImageURL', '/sauce', 'Returns URL of the last image.'),
+    command('getImageOrigin', '/origin', 'Returns origin URL of image.')
 
     # Disabled commands (paid api etc)
-    #command('redditCommand', '/reddit', 'Posts related Reddit comment.'),
+    #command('redditCommand', '/reddit', 'Posts related Reddit comment.')
 ]
 
 # Automatic responses to various strings within a message
@@ -169,7 +173,7 @@ def help(unused):
     reply(txt)
 
 # Find the first place an image was posted
-def origin(json_obj):
+def getImageOrigin(json_obj):
     try:
         imgUrl = json_obj['attachments'][0]['url']
         # Hit reverse image api
@@ -180,36 +184,41 @@ def origin(json_obj):
         reply('No image origin found.')
 
 # Reply with URL of last posted image
-def sauce(unused):
+def getImageURL(unused):
     last_image_url = ImagesTable.query.order_by(ImagesTable._id.desc()).first().url
     reply('The last image posted was from:\n' + last_image_url)
 
 # Query Wolfram Alpha API with question
 def wolframCommand(text):
+    url = 'http://api.wolframalpha.com/v2/query'
     data = {
         'appid': wolfram_api_key,
         'input': text[len('/wolf '):],
         'output': 'json'
     }
-    url = "http://api.wolframalpha.com/v2/query?" + urlencode(data)
-    resp = json.loads(urlopen(url).read().decode())
+    resp = requests.get(url, params=urlencode(data))
+    # url = "http://api.wolframalpha.com/v2/query?" + urlencode(data)
+    # resp = json.loads(urlopen(url).read().decode())
 
     try:
+        # TODO: this is likely broken
         reply('The answer is: ' + resp['queryresult']['pods'][1]['subpods'][0]['plaintext'])
     except:
         reply('No solution could be found')
 
 # Post a relevant gif from Giphy
 def giphy(text):
+    url = 'https://api.giphy.com/v1/gifs/search'
     data = {
         'api_key': giphy_api_key,
-        'q': text[len('/giphy '):],
+        'q': urlencode(text[len('/giphy '):]),
         'limit': 1
     }
-    url = 'https://api.giphy.com/v1/gifs/search?' + urlencode(data)
+    imgRequest = requests.get(url, params=data)
+    # url = 'https://api.giphy.com/v1/gifs/search?' + urlencode(data)
 
     # Get gif from Giphy
-    imgRequest = urlopen(url).read().decode()
+    # imgRequest = urlopen(url).read().decode()
 
     try:
         # Parse gif response
@@ -231,15 +240,17 @@ def lmgtfy(text):
     reply('http://lmgtfy.com/?' + urlencode(data))
 
 def xkcd(text):
+    url = 'https://relevantxkcd.appspot.com/process'
     data = {
         'action': 'xkcd',
-        'query': text[len('/xkcd '):]
+        'query': urlencode(text[len('/xkcd '):])
     }
-    url = 'https://relevantxkcd.appspot.com/process?' + urlencode(data)
+    # url = 'https://relevantxkcd.appspot.com/process?' + urlencode(data)
 
     try:
         # response
-        comicRequest = urlopen(url).read().decode()
+        comicRequest = requests.get(url, params=data)
+        # comicRequest = urlopen(url).read().decode()
 
         # Get comic file name
         comicName = comicRequest.split()[3].split('/')[-1]
@@ -252,7 +263,8 @@ def xkcd(text):
 # Get a random git commit message
 def git(unused):
     url = 'http://www.whatthecommit.com/index.txt'
-    reply(urlopen(url).read().decode())
+    reply(request.get(url))
+    # reply(urlopen(url).read().decode())
 
 # Clear the chat screen by posting newlines
 def clear(unused):
@@ -261,9 +273,14 @@ def clear(unused):
 
 # Tag everyone in the chat
 def all(unused):
-    url = 'https://api.groupme.com/v3/groups/{}?token={}'.format(group_id,personal_token)
+    url = 'https://api.groupme.com/v3/groups/{}'.format(group_id)
+    # url = 'https://api.groupme.com/v3/groups/{}?token={}'.format(group_id, personal_token)
+    data = {
+        'token': personal_token
+    }
 
-    groupInfo = json.loads(urlopen(url).read().decode())['response']
+    # groupInfo = json.loads(urlopen(url).read().decode())['response']
+    groupInfo = requests.get(url, params=data)
 
     text = '{"bot_id":"' + bot_id + '","text":"@all","attachments":[{'
     loci = '"loci":['
@@ -275,6 +292,7 @@ def all(unused):
     text += loci[:-1] + user_ids[:-1] + ']}]}'
 
     # Post to Groupme
+    #TODO: address this
     req = Request('https://api.groupme.com/v3/bots/post')
     req.add_header('Content-Type', 'application/json; charset=utf-8')
     jsonData = text.encode('utf-8')
@@ -318,8 +336,9 @@ def reply(msg):
         'bot_id': bot_id,
         'text': msg
     }
-    request = Request(url, urlencode(data).encode())
-    urlopen(request).read().decode()
+    requests.get(url,params=urlencode(data))
+    # request = Request(url, urlencode(data).encode())
+    # urlopen(request).read().decode()
 
 # Send a message with an image attached in the groupchat
 def reply_with_image(msg, imgURL):
@@ -336,8 +355,9 @@ def reply_with_image(msg, imgURL):
         'text': msg,
         'picture_url': urlOnGroupMeService
     }
-    request = Request(url, urlencode(data).encode())
-    urlopen(request).read().decode()
+    requests.get(url,params=urlencode(data))
+    # request = Request(url, urlencode(data).encode())
+    # urlopen(request).read().decode()
 
 # Uploads image to GroupMe's services and returns the new URL
 def upload_image_to_groupme(imgURL):
