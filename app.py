@@ -1,6 +1,6 @@
 # IMPORTS
 from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 import json
 import os
 import random
@@ -25,34 +25,34 @@ dictionary_api_key = os.environ.get('DICTIONARY_API_KEY')
 thesaurus_api_key = os.environ.get('THESAURUS_API_KEY')
 
 # Specify SQL Database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
 ################################################################################
 # DATABASE ITEMS                                                               #
 ################################################################################
 # Configure Database
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Start the database
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
 
-class ImagesTable(db.Model):
-    __tablename__ = "images"
+# class ImagesTable(db.Model):
+#     __tablename__ = "images"
 
-    _id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    url = db.Column(db.String(200), nullable = False)
+#     _id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+#     url = db.Column(db.String(200), nullable = False)
 
-    def __init__(self, url):
-        self.url = url
+#     def __init__(self, url):
+#         self.url = url
 
-class PostedImagesTable(db.Model):
-    __tablename__ = "posted_images"
+# class PostedImagesTable(db.Model):
+#     __tablename__ = "posted_images"
 
-    _id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    url = db.Column(db.String(200), nullable = False)
+#     _id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+#     url = db.Column(db.String(200), nullable = False)
 
-    def __init__(self, url):
-        self.url = url
+#     def __init__(self, url):
+#         self.url = url
 
 ################################################################################
 # SETUP MAIN FUNCTIONS                                                         #
@@ -110,16 +110,11 @@ def webhook():
     # 'message' is an object that represents a single GroupMe message.
     message = request.get_json()
 
-    try:
-        print(message)
-    except Exception as e:
-        print('Exception: ' + e)
-
     # Don't respond to bot messages
     if sender_is_bot(message):
         return 'Bot message, ignoring', 200
 
-    # Log message text (again)
+    # Log message text
     try:
         print('Message text: ' + message['text'])
     except Exception as e:
@@ -186,8 +181,9 @@ def getImageOrigin(json_obj):
 
 # Reply with URL of last posted image
 def getImageURL(unused):
-    last_image_url = ImagesTable.query.order_by(ImagesTable._id.desc()).first().url
-    reply('The last image posted was from:\n' + last_image_url)
+    # last_image_url = ImagesTable.query.order_by(ImagesTable._id.desc()).first().url
+    # reply('The last image posted was from:\n' + last_image_url)
+    pass
 
 # Query Wolfram Alpha API with question
 def wolframCommand(text):
@@ -299,7 +295,7 @@ def all(unused):
 
     header = {
         'Content-Type': 'application/json; charset=utf-8',
-        'Content-Length': ''.format(len(data))
+        'Content-Length': str(len(data))
     }
 
     requests.post(url, headers=header, data=data)
