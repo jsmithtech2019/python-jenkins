@@ -212,10 +212,10 @@ def giphy(text):
     url = 'https://api.giphy.com/v1/gifs/search'
     data = {
         'api_key': giphy_api_key,
-        'q': urlencode(text[len('/giphy '):]),
+        'q': text[len('/giphy '):],
         'limit': 1
     }
-    imgRequest = requests.get(url, params=data)
+    imgRequest = requests.get(url, params=urlencode(data))
     # url = 'https://api.giphy.com/v1/gifs/search?' + urlencode(data)
 
     # Get gif from Giphy
@@ -244,13 +244,13 @@ def xkcd(text):
     url = 'https://relevantxkcd.appspot.com/process'
     data = {
         'action': 'xkcd',
-        'query': urlencode(text[len('/xkcd '):])
+        'query': text[len('/xkcd '):]
     }
     # url = 'https://relevantxkcd.appspot.com/process?' + urlencode(data)
 
     try:
         # response
-        comicRequest = requests.get(url, params=data)
+        comicRequest = requests.get(url, params=urlencode(data))
         # comicRequest = urlopen(url).read().decode()
 
         # Get comic file name
