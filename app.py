@@ -292,13 +292,24 @@ def all(unused):
 
     text += loci[:-1] + user_ids[:-1] + ']}]}'
 
+    data = text.encode('utf-8')
+
     # Post to Groupme
     #TODO: address this
-    req = Request('https://api.groupme.com/v3/bots/post')
-    req.add_header('Content-Type', 'application/json; charset=utf-8')
-    jsonData = text.encode('utf-8')
-    req.add_header('Content-Length', len(jsonData))
-    urlopen(req, jsonData)
+    url = 'https://api.groupme.com/v3/bots/post'
+
+    header = {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Length': len(data)
+    }
+
+    requests.post(url, headers=header, data=data)
+
+    # req = Request('https://api.groupme.com/v3/bots/post')
+    # req.add_header('Content-Type', 'application/json; charset=utf-8')
+    # jsonData = text.encode('utf-8')
+    # req.add_header('Content-Length', len(jsonData))
+    # urlopen(req, jsonData)
 
 # Find the dictionary definition of a word
 def dictionary(text):
