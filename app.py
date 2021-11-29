@@ -350,9 +350,9 @@ def reply(msg):
 # Send a message with an image attached in the groupchat
 def reply_with_image(msg, imgURL):
     # Store copy of original URL
-    new_data = ImagesTable(imgURL)
-    db.session.add(new_data)
-    db.session.commit()
+    # new_data = ImagesTable(imgURL)
+    # db.session.add(new_data)
+    # db.session.commit()
 
     # Upload to GroupMe for processing
     url = 'https://api.groupme.com/v3/bots/post'
@@ -362,7 +362,7 @@ def reply_with_image(msg, imgURL):
         'text': msg,
         'picture_url': urlOnGroupMeService
     }
-    requests.post(url,params=urlencode(data))
+    requests.post(url, params=urlencode(data))
     # request = Request(url, urlencode(data).encode())
     # urlopen(request).read().decode()
 
