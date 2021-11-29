@@ -10,10 +10,30 @@ from urllib.request import Request, urlopen
 
 app = Flask(__name__)
 
-# Database Information
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+################################################################################
+# DEFINE ENVIRONMENT                                                           #
+################################################################################
+# Get Environment Variables
+bot_id = os.environ.get('GROUPME_BOT_ID')
+group_id = os.environ.get('GROUPME_GROUP_ID')
+personal_token = os.environ.get('MY_GROUPME_TOKEN')
+
+# Specify API keys
+giphy_api_key = os.environ.get('GIPHY_API_KEY')
+wolfram_api_key = os.environ.get('WOLFRAM_APP_ID')
+dictionary_api_key = os.environ.get('DICTIONARY_API_KEY')
+thesaurus_api_key = os.environ.get('THESAURUS_API_KEY')
+
+# Specify SQL Database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
+################################################################################
+# DATABASE ITEMS                                                               #
+################################################################################
+# Configure Database
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Start the database
 db = SQLAlchemy(app)
 
 class ImagesTable(db.Model):
@@ -25,16 +45,18 @@ class ImagesTable(db.Model):
     def __init__(self, url):
         self.url = url
 
-# Get Environment Variables
-bot_id = os.environ.get('GROUPME_BOT_ID')
-group_id = os.environ.get('GROUPME_GROUP_ID')
-personal_token = os.environ.get('MY_GROUPME_TOKEN')
+class PostedImagesTable(db.Model):
+    __tablename__ = "posted_images"
 
-giphy_api_key = os.environ.get('GIPHY_API_KEY')
-wolfram_api_key = os.environ.get('WOLFRAM_APP_ID')
-dictionary_api_key = os.environ.get('DICTIONARY_API_KEY')
-thesaurus_api_key = os.environ.get('THESAURUS_API_KEY')
+    _id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    url = db.Column(db.String(200), nullable = False)
 
+    def __init__(self, url):
+        self.url = url
+
+################################################################################
+# SETUP MAIN FUNCTIONS                                                         #
+################################################################################
 # Contains the function name, command syntax and description
 # of the each available command
 class command:
@@ -55,10 +77,11 @@ commands = [
     command('dictionary', '/dict', 'Returns definition of word.'),
     command('thesaurus', '/thes', 'Returns similar words.'),
     command('wolframCommand', '/wolf', 'Finds Answer on Wolfram Alpha.'),
-    command('sauce', '/sauce', 'Returns origin URL of last image.')
+    command('getImageURL', '/sauce', 'Returns URL of the last image.'),
+    command('getImageOrigin', '/origin', 'Returns origin URL of image.')
 
     # Disabled commands (paid api etc)
-    #command('redditCommand', '/reddit', 'Posts related Reddit comment.'),
+    #command('redditCommand', '/reddit', 'Posts related Reddit comment.')
 ]
 
 # Automatic responses to various strings within a message
@@ -72,31 +95,14 @@ auto = {
     'btfd': 'https://i.imgur.com/sGSuTl7.jpg'
 }
 
-# Jenkins butlerish statements
-butlerStatements = ['You rang sir?',
-                    'Those who choose to be servants know the most about being free.',
-                    'Am I really the only servant here?',
-                    'You can\'t unfry an egg, sir.',
-                    'Who employs butlers anymore?',
-                    'I see nothing, I hear nothing, I only serve.',
-                    'Good evening, Colonel. Can I give you a lift?',
-                    'You are not authorized to access this area.',
-                    'As far as I\'m concerned, \'whom\' is a word that was invented to make everyone sound like a butler.',
-                    'Ah, the patter of little feet around the house. There\'s nothing like having a midget for a butler.',
-                    'Wives in their husbands\' absences grow subtler, And daughters sometimes run off with the butler.',
-                    'I think I\'d take a human butler over a robot one.',
-                    'I went back-to-back from \'AI\' to \'Butler,\' literally with no break.',
-                    'I\'m simply one hell of a butler.',
-                    'It was no time for mercy, it was time to terminate with extreme prejudice.',
-                    'The thing about a diversion is that it has to be diverting.',
-                    'Jenkins, of course, is a gentleman’s gentlemen, not a butler, but if the call comes, he can buttle with the best of them.',
-                    'There are few greater pleasures in life than a devoted butler.',
-                    'A good butler should save his employer\'s life at least once a day.',
-                    'Never pass up new experiences, they enrich the mind.',
-                    'No one is a hero to their butler.',
-                    'Very good, Sir',
-                    'That\'s the sort of special touch that a butler always adds']
+# Load Jenkins butlerish statements and return one at random
+def getButlerQuote():
+    with open('butler_statments.json', 'r') as f:
+        return random.choice(json.loads(f.read()))
 
+################################################################################
+# MAIN                                                                         #
+################################################################################
 # Called whenever the app's callback URL receives a POST request
 # That'll happen every time a message is sent in the group
 @app.route('/', methods=['POST'])
@@ -137,7 +143,7 @@ def webhook():
 
     # Jenkins response
     if 'jenkin' in message['text']:
-        reply(random.choice(butlerStatements))
+        reply(random.choice(getButlerQuote()))
         return '', 200
 
     # Check if someone was removed or added
@@ -155,8 +161,10 @@ def webhook():
     # No command called or found, return
     return 'No command found', 200
 
-################################################################################
 
+################################################################################
+# ADDITIONAL HELPER FUNCTIONS                                                  #
+################################################################################
 # Print the help message for all commands
 def help(unused):
     txt = 'Usage instructions for your Butler:\n'
@@ -165,37 +173,53 @@ def help(unused):
 
     reply(txt)
 
+# Find the first place an image was posted
+def getImageOrigin(json_obj):
+    try:
+        imgUrl = json_obj['attachments'][0]['url']
+        # Hit reverse image api
+        # Parse response for origin URL
+        # Reply with origin
+    except Exception as e:
+        print('Exception: ' + e)
+        reply('No image origin found.')
+
 # Reply with URL of last posted image
-def sauce(unused):
+def getImageURL(unused):
     last_image_url = ImagesTable.query.order_by(ImagesTable._id.desc()).first().url
     reply('The last image posted was from:\n' + last_image_url)
 
 # Query Wolfram Alpha API with question
 def wolframCommand(text):
+    url = 'http://api.wolframalpha.com/v2/query'
     data = {
         'appid': wolfram_api_key,
         'input': text[len('/wolf '):],
         'output': 'json'
     }
-    url = "http://api.wolframalpha.com/v2/query?" + urlencode(data)
-    resp = json.loads(urlopen(url).read().decode())
+    resp = requests.get(url, params=urlencode(data))
+    # url = "http://api.wolframalpha.com/v2/query?" + urlencode(data)
+    # resp = json.loads(urlopen(url).read().decode())
 
     try:
+        # TODO: this is likely broken
         reply('The answer is: ' + resp['queryresult']['pods'][1]['subpods'][0]['plaintext'])
     except:
         reply('No solution could be found')
 
 # Post a relevant gif from Giphy
 def giphy(text):
+    url = 'https://api.giphy.com/v1/gifs/search'
     data = {
         'api_key': giphy_api_key,
-        'q': text[len('/giphy '):],
+        'q': urlencode(text[len('/giphy '):]),
         'limit': 1
     }
-    url = 'https://api.giphy.com/v1/gifs/search?' + urlencode(data)
+    imgRequest = requests.get(url, params=data)
+    # url = 'https://api.giphy.com/v1/gifs/search?' + urlencode(data)
 
     # Get gif from Giphy
-    imgRequest = urlopen(url).read().decode()
+    # imgRequest = urlopen(url).read().decode()
 
     try:
         # Parse gif response
@@ -217,15 +241,17 @@ def lmgtfy(text):
     reply('http://lmgtfy.com/?' + urlencode(data))
 
 def xkcd(text):
+    url = 'https://relevantxkcd.appspot.com/process'
     data = {
         'action': 'xkcd',
-        'query': text[len('/xkcd '):]
+        'query': urlencode(text[len('/xkcd '):])
     }
-    url = 'https://relevantxkcd.appspot.com/process?' + urlencode(data)
+    # url = 'https://relevantxkcd.appspot.com/process?' + urlencode(data)
 
     try:
         # response
-        comicRequest = urlopen(url).read().decode()
+        comicRequest = requests.get(url, params=data)
+        # comicRequest = urlopen(url).read().decode()
 
         # Get comic file name
         comicName = comicRequest.split()[3].split('/')[-1]
@@ -238,7 +264,8 @@ def xkcd(text):
 # Get a random git commit message
 def git(unused):
     url = 'http://www.whatthecommit.com/index.txt'
-    reply(urlopen(url).read().decode())
+    reply(request.get(url))
+    # reply(urlopen(url).read().decode())
 
 # Clear the chat screen by posting newlines
 def clear(unused):
@@ -247,9 +274,14 @@ def clear(unused):
 
 # Tag everyone in the chat
 def all(unused):
-    url = 'https://api.groupme.com/v3/groups/{}?token={}'.format(group_id,personal_token)
+    url = 'https://api.groupme.com/v3/groups/{}'.format(group_id)
+    # url = 'https://api.groupme.com/v3/groups/{}?token={}'.format(group_id, personal_token)
+    data = {
+        'token': personal_token
+    }
 
-    groupInfo = json.loads(urlopen(url).read().decode())['response']
+    # groupInfo = json.loads(urlopen(url).read().decode())['response']
+    groupInfo = requests.get(url, params=data)
 
     text = '{"bot_id":"' + bot_id + '","text":"@all","attachments":[{'
     loci = '"loci":['
@@ -261,6 +293,7 @@ def all(unused):
     text += loci[:-1] + user_ids[:-1] + ']}]}'
 
     # Post to Groupme
+    #TODO: address this
     req = Request('https://api.groupme.com/v3/bots/post')
     req.add_header('Content-Type', 'application/json; charset=utf-8')
     jsonData = text.encode('utf-8')
@@ -304,8 +337,9 @@ def reply(msg):
         'bot_id': bot_id,
         'text': msg
     }
-    request = Request(url, urlencode(data).encode())
-    urlopen(request).read().decode()
+    requests.get(url,params=urlencode(data))
+    # request = Request(url, urlencode(data).encode())
+    # urlopen(request).read().decode()
 
 # Send a message with an image attached in the groupchat
 def reply_with_image(msg, imgURL):
@@ -322,8 +356,9 @@ def reply_with_image(msg, imgURL):
         'text': msg,
         'picture_url': urlOnGroupMeService
     }
-    request = Request(url, urlencode(data).encode())
-    urlopen(request).read().decode()
+    requests.get(url,params=urlencode(data))
+    # request = Request(url, urlencode(data).encode())
+    # urlopen(request).read().decode()
 
 # Uploads image to GroupMe's services and returns the new URL
 def upload_image_to_groupme(imgURL):
