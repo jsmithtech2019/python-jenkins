@@ -299,7 +299,7 @@ def all(unused):
 
     header = {
         'Content-Type': 'application/json; charset=utf-8',
-        'Content-Length': len(data)
+        'Content-Length': ''.format(len(data))
     }
 
     requests.post(url, headers=header, data=data)
