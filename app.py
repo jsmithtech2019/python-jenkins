@@ -286,7 +286,7 @@ def all(unused):
     text = '{"bot_id":"' + bot_id + '","text":"@all","attachments":[{'
     loci = '"loci":['
     user_ids = '],"type":"mentions","user_ids":['
-    for person in groupInfo.json()['members']:
+    for person in groupInfo.json()['response']['members']:
         loci += '[0,1],'
         user_ids += '"{}",'.format(person['user_id'])
 
