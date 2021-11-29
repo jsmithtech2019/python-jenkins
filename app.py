@@ -337,7 +337,7 @@ def reply(msg):
         'bot_id': bot_id,
         'text': msg
     }
-    requests.get(url,params=urlencode(data))
+    requests.post(url, params=urlencode(data))
     # request = Request(url, urlencode(data).encode())
     # urlopen(request).read().decode()
 
@@ -356,7 +356,7 @@ def reply_with_image(msg, imgURL):
         'text': msg,
         'picture_url': urlOnGroupMeService
     }
-    requests.get(url,params=urlencode(data))
+    requests.post(url,params=urlencode(data))
     # request = Request(url, urlencode(data).encode())
     # urlopen(request).read().decode()
 
@@ -367,7 +367,7 @@ def upload_image_to_groupme(imgURL):
     else:
         filename = 'temp.png'
 
-    imgRequest = requests.get(imgURL, stream=True)
+    imgRequest = requests.post(imgURL, stream=True)
 
     if imgRequest.status_code == 200:
         # Save Image
