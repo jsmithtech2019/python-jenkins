@@ -223,10 +223,10 @@ def giphy(text):
 
     try:
         # Parse gif response
-        idobj = json.loads(imgRequest)['data'][0]
+        imgId = imgRequest.json()['data'][0]['id']
 
         # Format and respond with URL
-        giphyUrl = 'http://i.giphy.com/{}.gif'.format(idobj['id'])
+        giphyUrl = 'http://i.giphy.com/{}.gif'.format(imgId)
         reply_with_image('', giphyUrl)
 
     except Exception as e:
