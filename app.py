@@ -127,7 +127,7 @@ def webhook():
     for c in commands:
         if c.syntax in message['text'][0:len(c.syntax)]:
             # Call the method with that name
-            globals()[c.name](message['text'])
+            globals()[c.name](message['text'][len(c.syntax):])
             return '', 200
 
     # Reply with one of the automatic easter eggs
@@ -190,7 +190,7 @@ def wolframCommand(text):
     url = 'http://api.wolframalpha.com/v2/query'
     data = {
         'appid': wolfram_api_key,
-        'input': text[len('/wolf '):],
+        'input': text,
         'output': 'json'
     }
     resp = requests.get(url, params=urlencode(data))
@@ -208,7 +208,7 @@ def giphy(text):
     url = 'https://api.giphy.com/v1/gifs/search'
     data = {
         'api_key': giphy_api_key,
-        'q': text[len('/giphy '):],
+        'q': text,
         'limit': 1
     }
     imgRequest = requests.get(url, params=urlencode(data))
@@ -231,16 +231,17 @@ def giphy(text):
         reply('Couldn\'t find a gif 💩')
 
 def lmgtfy(text):
+    url = 'http://lmgtfy.com/'
     data = {
-        'q': text[len('/lmgtfy '):]
+        'q': text
     }
-    reply('http://lmgtfy.com/?' + urlencode(data))
+    reply(url + urlencode(data))
 
 def xkcd(text):
     url = 'https://relevantxkcd.appspot.com/process'
     data = {
         'action': 'xkcd',
-        'query': text[len('/xkcd '):]
+        'query': text
     }
     # url = 'https://relevantxkcd.appspot.com/process?' + urlencode(data)
 
@@ -279,14 +280,21 @@ def all(unused):
     # groupInfo = json.loads(urlopen(url).read().decode())['response']
     groupInfo = requests.get(url, params=data)
 
-    text = '{"bot_id":"' + bot_id + '","text":"@all","attachments":[{'
-    loci = '"loci":['
-    user_ids = '],"type":"mentions","user_ids":['
-    for person in groupInfo.json()['response']['members']:
-        loci += '[0,1],'
-        user_ids += '"{}",'.format(person['user_id'])
+    text = {
+        'bot_id': bot_id,
+        'text': '@all',
+        'attachments': [
+            {
+                'loci': [],
+                'type': 'mentions',
+                'user_ids': []
+            }
+        ]
+    }
 
-    text += loci[:-1] + user_ids[:-1] + ']}]}'
+    for person in groupInfo.json()['response']['members']:
+        text['attachments'][0]['loci'].append([0,1])
+        text['attachments'][0]['user_ids'].append(str(person['user_id']))
 
     data = text.encode('utf-8')
 
@@ -308,32 +316,45 @@ def all(unused):
 
 # Find the dictionary definition of a word
 def dictionary(text):
+
+    url = 'https://dictionaryapi.com/api/v3/references/collegiate/json/{}'.format(text.partition(' ')[0])
+
     data = {
         'key': dictionary_api_key
     }
-    url = 'https://dictionaryapi.com/api/v3/references/collegiate/json/{}?'.format(text[len('/dict '):].partition(' ')[0]) + urlencode(data)
     #url = 'https://dictionaryapi.com/api/v3/references/collegiate/json/{}?key={}'.format(text[len('/dict '):].partition(' ')[0],dictionary_api_key)
 
     try:
         # response
-        resp = 'Definition: ' + '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
+        resp = requests.get(url, data=data)
+        dictionaryDefinition = 'Definition: ' + '; '.join(resp.json()[0]['shortdef'])
 
-        reply(resp)
+        # resp = 'Definition: ' + '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
+
+        reply(dictionaryDefinition)
 
     except Exception:
         reply('Couldn\'t find a definition.')
 
 # Find the similar words using thesaurus
 def thesaurus(text):
-    url = 'https://dictionaryapi.com/api/v3/references/thesaurus/json/{}?key={}'.format(text[len('/thes '):].partition(' ')[0],thesaurus_api_key)
+    url = 'https://dictionaryapi.com/api/v3/references/thesaurus/json/{}'.format(text.partition(' ')[0])
+
+    data = {
+        'key': thesaurus_api_key
+    }
+    # url = 'https://dictionaryapi.com/api/v3/references/thesaurus/json/{}?key={}'.format(text[len('/thes '):].partition(' ')[0],thesaurus_api_key)
 
     try:
-        # response
-        resp = '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
+        resp = requests.get(url, data=urlencode(data))
 
-        reply(resp)
+        thesaurusDefinition = '; '.join(resp.json()[0]['shortdef'])
+        # resp = '; '.join(json.loads(urlopen(url).read().decode())[0]['shortdef'])
 
-    except Exception:
+        reply(thesaurusDefinition)
+
+    except Exception as e:
+        print('Exception: ' + e)
         reply('Couldn\'t find a definition.')
 
 # Send a message in the groupchat
@@ -343,13 +364,15 @@ def reply(msg):
         'bot_id': bot_id,
         'text': msg
     }
-    requests.post(url, params=urlencode(data))
-    # request = Request(url, urlencode(data).encode())
-    # urlopen(request).read().decode()
+    status = requests.post(url, params=urlencode(data))
+    if status.status_code != 200:
+        print('Error replying to GroupMe: {}'.format(status.status_code))
+        print(status.text)
 
 # Send a message with an image attached in the groupchat
 def reply_with_image(msg, imgURL):
     # Store copy of original URL
+    # TODO: Re-enable DB
     # new_data = ImagesTable(imgURL)
     # db.session.add(new_data)
     # db.session.commit()
@@ -362,9 +385,10 @@ def reply_with_image(msg, imgURL):
         'text': msg,
         'picture_url': urlOnGroupMeService
     }
-    requests.post(url, params=urlencode(data))
-    # request = Request(url, urlencode(data).encode())
-    # urlopen(request).read().decode()
+    status = requests.post(url, params=urlencode(data))
+    if status.status_code != 200:
+        print('Error replying with image')
+        print(status.text)
 
 # Uploads image to GroupMe's services and returns the new URL
 def upload_image_to_groupme(imgURL):
@@ -376,19 +400,32 @@ def upload_image_to_groupme(imgURL):
     imgRequest = requests.post(imgURL, stream=True)
 
     if imgRequest.status_code == 200:
-        # Save Image
+        # Save image to file system
         with open(filename, 'wb') as image:
             for chunk in imgRequest:
                 image.write(chunk)
 
         # Send Image
         url = 'https://image.groupme.com/pictures'
-        files = {'file': open(filename, 'rb')}
-        payload = {'access_token': personal_token}
-        r = requests.post(url, files=files, params=payload)
+
+        files = {
+            'file': open(filename, 'rb')
+        }
+
+        data = {
+            'access_token': personal_token
+        }
+
+        r = requests.post(url, files=files, params=urlencode(data))
+
         imageurl = r.json()['payload']['url']
+
+        # Delete image from file system
         os.remove(filename)
         return imageurl
+    else:
+        print('Exception uploading image to GroupMe: {}'.format(imgRequest.status_code))
+        print(imgRequest.text)
 
 # Checks whether the message sender is a bot
 def sender_is_bot(message):
