@@ -145,10 +145,10 @@ def webhook():
     try:
         if (message['sender_type'] == 'system') and ('removed' in message['text']):
             print('Sniping...')
-            giphy('/giphy sniper')
+            giphy('sniper')
             return '', 200
         elif (message['sender_type'] == 'system') and ('added' in message['text']):
-            giphy('/giphy hello')
+            giphy('hello')
             return '', 200
     except:
         pass
@@ -333,7 +333,8 @@ def dictionary(text):
 
         reply(dictionaryDefinition)
 
-    except Exception:
+    except Exception as e:
+        print('Exception: ' + e)
         reply('Couldn\'t find a definition.')
 
 # Find the similar words using thesaurus
@@ -397,7 +398,7 @@ def upload_image_to_groupme(imgURL):
     else:
         filename = 'temp.png'
 
-    imgRequest = requests.post(imgURL, stream=True)
+    imgRequest = requests.get(imgURL, stream=True)
 
     if imgRequest.status_code == 200:
         # Save image to file system
