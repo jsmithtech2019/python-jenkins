@@ -98,7 +98,7 @@ auto = {
 # Load Jenkins butlerish statements and return one at random
 def getButlerQuote():
     with open('butler_statements.json', 'r') as f:
-        return random.choice(json.loads(f.read()))
+        reply(random.choice(json.loads(f.read())))
 
 ################################################################################
 # MAIN                                                                         #
@@ -138,7 +138,7 @@ def webhook():
 
     # Jenkins response
     if 'jenkin' in message['text'].lower():
-        reply(random.choice(getButlerQuote()))
+        getButlerQuote()
         return '', 200
 
     # Check if someone was removed or added
