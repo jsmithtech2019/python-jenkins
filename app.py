@@ -137,7 +137,7 @@ def webhook():
             return '', 200
 
     # Jenkins response
-    if 'jenkin' in message['text']:
+    if 'jenkin' in message['text'].lower():
         reply(random.choice(getButlerQuote()))
         return '', 200
 
