@@ -97,7 +97,7 @@ auto = {
 
 # Load Jenkins butlerish statements and return one at random
 def getButlerQuote():
-    with open('butler_statments.json', 'r') as f:
+    with open('butler_statements.json', 'r') as f:
         return random.choice(json.loads(f.read()))
 
 ################################################################################
