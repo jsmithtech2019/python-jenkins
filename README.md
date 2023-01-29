@@ -1,4 +1,4 @@
-# *(Python 3)* Groupme Butler
+## *(Python 3)* Groupme Butler
 
 ## Setup & Deployment
 
