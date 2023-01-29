@@ -10,6 +10,8 @@ from urllib.request import Request, urlopen
 
 app = Flask(__name__)
 
+## All database functionality has been disabled on heroku
+
 ################################################################################
 # DEFINE ENVIRONMENT                                                           #
 ################################################################################
