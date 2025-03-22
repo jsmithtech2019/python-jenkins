@@ -1,5 +1,5 @@
 Flask>=1.0
-gunicorn>=19.6.0
+gunicorn>=23.0.0
 requests>=2.22.0
 Flask-SQLAlchemy>=2.4.4
 psycopg2>=2.8.6
